@@ -8,6 +8,7 @@ def improve(sol):
 
 def tryImprove(sol):
     sel, ofVarSel, unsel, ofVarUnsel = selectInterchange(sol)
+    print("sel: ", sel, "ofVarSel: ", ofVarSel)
     if ofVarSel < ofVarUnsel:
         solution.removeFromSolution(sol, sel, ofVarSel)
         solution.addToSolution(sol, unsel, ofVarUnsel)
@@ -18,14 +19,14 @@ def tryImprove(sol):
 def selectInterchange(sol):
     n = sol['instance']['n']
     sel = -1
-    bestSel = 0x3f3f3f                                       # Best distance for interchange -> Minimum distance
+    bestSel = 0x3f3f3f                                       # Best distance for interchange (We search the lowest distance, so undesirable)
     unsel = -1
     bestUnsel = 0
     for v in sol['sol']:
         d = solution.distanceToSol(sol, v)
         if d < bestSel:
             bestSel = d
-            sel = v                                          # Best node to remove
+            sel = v                                          # Best node to remove -> Minimum distance
     for v in range(n):
         if not solution.contains(sol, v):
             d = solution.distanceToSol(sol, v, without=sel)  ##### We changed the position of this line #####
