@@ -1,4 +1,3 @@
-
 def readInstance(path):
     instance = {}
     with open(path, "r") as f:

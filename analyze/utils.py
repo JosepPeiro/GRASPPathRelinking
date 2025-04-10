@@ -10,7 +10,6 @@ def analyzeResults(file_path=None):
 
     df = pd.read_csv(file_path)
 
-    # print(Fore.CYAN + "Analyzing results from: ", os.path.basename(file_path))
     best_per_instance = df.groupby('instance')['obj_value'].max()
 
     deviations = []
@@ -21,17 +20,8 @@ def analyzeResults(file_path=None):
     df['deviation'] = deviations
     
     avg_dev = df.groupby('alpha')['deviation'].mean()
-    # print(Fore.YELLOW + "\nAverage % Deviation from best per alpha:")
-    # print(Fore.CYAN + "alpha" + Fore.CYAN + "\tdeviation (%)")
-    # for alpha, dev in avg_dev.items():
-    #     print(f"{Fore.MAGENTA}{alpha:4.1f}\t  {Fore.GREEN}{dev:8.6f}")
-    
     df['is_best'] = df.apply(lambda x: x['obj_value'] == best_per_instance[x['instance']], axis=1)
     best_count = df.groupby('alpha')['is_best'].sum()
-    # print(Fore.YELLOW + "\nNumber of best solutions found per alpha:")
-    # print(Fore.CYAN + "alpha" + Fore.CYAN + "\t# hits on best solution")
-    # for alpha, count in best_count.items():
-    #     print(f"{Fore.MAGENTA}{alpha:4.1f}\t\t{Fore.GREEN}{count}")
 
     return best_count, avg_dev
 

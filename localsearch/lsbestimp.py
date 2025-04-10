@@ -18,18 +18,18 @@ def tryImprove(sol):
 def selectInterchange(sol):
     n = sol['instance']['n']
     sel = -1
-    bestSel = 0x3f3f3f
+    bestSel = 0x3f3f3f                                       # Best distance for interchange -> Minimum distance
     unsel = -1
     bestUnsel = 0
     for v in sol['sol']:
         d = solution.distanceToSol(sol, v)
         if d < bestSel:
             bestSel = d
-            sel = v
+            sel = v                                          # Best node to remove
     for v in range(n):
-        d = solution.distanceToSol(sol, v, without=sel)
         if not solution.contains(sol, v):
+            d = solution.distanceToSol(sol, v, without=sel)  ##### We changed the position of this line #####
             if d > bestUnsel:
                 bestUnsel = d
-                unsel = v
-    return sel, round(bestSel,2), unsel, round(bestUnsel,2)
+                unsel = v                                    # Best node to add -> Maximum distance
+    return sel, round(bestSel,2), unsel, round(bestUnsel,2)  # Return: best node to remove and its distance, best node to add and its distance

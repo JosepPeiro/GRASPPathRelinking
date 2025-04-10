@@ -1,20 +1,15 @@
 from constructives import cgrasp
 from localsearch import lsbestimp
 import time
-from colorama import Fore
 
 def execute(inst, iters, alpha, max_time):
-    t_start = time.time()
+    t_start = time.time()                                  # Start the timer
+    it = 0                                                 # Iteration counter
     best = None
-    for i in range(iters):
-        # print(Fore.CYAN + "Iter "+str(i+1)+": ", end="")
-        sol = cgrasp.construct(inst, alpha)
-        # print(Fore.GREEN + "C -> "+str(round(sol['of'], 2)), end=", ")
-        lsbestimp.improve(sol)
-        # print(Fore.YELLOW + "LS -> "+str(round(sol['of'], 2)))
+    while it < iters and time.time() - t_start < max_time: # If we reach the max of iterations or the max time, stop
+        it += 1
+        sol = cgrasp.construct(inst, alpha)                # Constructive grasp
+        lsbestimp.improve(sol)                             # Local search
         if best is None or best['of'] < sol['of']:
             best = sol
-        t_end = time.time()
-        if t_end - t_start > max_time:
-            return best, t_end - t_start
-    return best, t_end - t_start
+    return best, time.time() - t_start

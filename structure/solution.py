@@ -1,10 +1,8 @@
-from colorama import Fore
-
 def createEmptySolution(instance):
     sol = {}
     sol['instance'] = instance
     sol['sol'] = set()
-    sol['of'] = 0
+    sol['of'] = 0               # Objective Value
     return sol
 
 
@@ -52,8 +50,8 @@ def distanceToSol(sol, u, without = -1):
 
 
 def printSolution(sol):
-    print(Fore.GREEN + "Solution: ", end="")
+    print("Solution: ", end="")
     for s in sol['sol']:
-        print(Fore.WHITE + str(s), end=" ")
+        print(str(s), end=" ")
     print()
-    print(Fore.YELLOW + "Objective Value: "+str(round(sol['of'], 2)))
+    print("Objective Value: "+str(round(sol['of'], 2)))
