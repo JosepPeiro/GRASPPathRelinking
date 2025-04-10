@@ -3,8 +3,8 @@ def readInstance(path):
     with open(path, "r") as f:
         # First line in file has two numbers: n p
         n, p = f.readline().split()
-        n = int(n)
-        p = int(p)
+        n = int(n) # Number of elements in the instance
+        p = int(p) # Number of elements to choose for the solution
         instance['n'] = n
         instance['p'] = p
         instance['d'] = []
