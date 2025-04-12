@@ -1,16 +1,25 @@
 from constructives import cgrasp
 from structure import solution
+import time
+from localsearch import lsbestimp
 
-def ConstrucMultipleSolutions(inst, alpha = 0.1, nsol = 10):
+def ConstrucMultipleSolutions(inst, alpha=0.1, nsol=10, max_time=None, local_search=False):
+    t_start = time.time()
     lsol = []
     bestSol = {"of":0}
-    for _ in range(nsol):
+    
+    i = 0
+    while (max_time is None and i < nsol) or (max_time is not None and time.time() - t_start < max_time):
         sol = cgrasp.construct(inst, alpha)
         # solution.printSolution(sol)
+        if local_search:
+            lsbestimp.improve(sol)
         lsol.append(sol)
 
         if sol["of"] > bestSol["of"]:
             bestSol = sol
+        
+        i += 1
 
     return bestSol, lsol
 

@@ -1,5 +1,4 @@
 import pandas as pd
-from colorama import Fore
 import os
 
 def analyzeResults(file_path=None):
