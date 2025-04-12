@@ -1,22 +1,23 @@
-from PathRelinking import ConstrucMultipleSolutions, findLowestIntersection, PathRelinking
+from PathRelinking import ConstructMultipleSolutions, findLowestIntersection, PathRelinking
 from structure import instance, solution
 import time
 
-def ExecutePathRelinking(inst, alpha, iters=100, max_time=10, nsols=10, prop_time_grasp=0.5):
-    t_start = time.time()                                  # Start the timer
-    it = 0                                                 # Iteration counter
+def ExecutePathRelinking(inst, alpha, iters=100, max_time=10, nsols=10, prop_time_grasp=0.5,
+                         local_search_before=False, local_search_after=False):
+    t_start = time.time()                                                     # Start the timer
+    it = 0                                                                    # Iteration counter
     best = None
-    grasp_time = prop_time_grasp * max_time
+    grasp_time = prop_time_grasp * max_time if prop_time_grasp > 0 else None  # Time for GRASP
 
     while it < iters and time.time() - t_start < max_time:
         it += 1
-        best_cons, lsol = ConstrucMultipleSolutions(inst, alpha, nsols, max_time=grasp_time)
+        best_cons, lsol = ConstructMultipleSolutions(inst, alpha, nsols, max_time=grasp_time, local_search = local_search_before)
         if best is None or best['of'] < best_cons['of']:
             best = best_cons.copy()
             solution.printSolution(best)
 
         alternative = findLowestIntersection(best, lsol)
-        super = PathRelinking(alternative, best)
+        super = PathRelinking(alternative, best, local_search=local_search_after)
         
         if best is None or best['of'] < super['of']:
             best = super.copy()

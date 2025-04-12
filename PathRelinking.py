@@ -3,7 +3,7 @@ from structure import solution
 import time
 from localsearch import lsbestimp
 
-def ConstrucMultipleSolutions(inst, alpha=0.1, nsol=10, max_time=None, local_search=False):
+def ConstructMultipleSolutions(inst, alpha=0.1, nsol=10, max_time=None, local_search=False):
     t_start = time.time()
     lsol = []
     bestSol = {"of":0}
@@ -18,7 +18,7 @@ def ConstrucMultipleSolutions(inst, alpha=0.1, nsol=10, max_time=None, local_sea
 
         if sol["of"] > bestSol["of"]:
             bestSol = sol
-        
+            
         i += 1
 
     return bestSol, lsol
@@ -31,11 +31,11 @@ def findLowestIntersection(bestSol, lsol):
             if len(bestSol["sol"].intersection(scand["sol"])) < intersec:
                 intersec = len(bestSol["sol"].intersection(scand["sol"]))
                 cand = scand
-    
+
     return cand
 
 
-def PathRelinking(origin, dest):
+def PathRelinking(origin, dest, local_search=False):
     bestEver = dest
     while dest["sol"] != origin["sol"]:
         remove = None
@@ -61,5 +61,7 @@ def PathRelinking(origin, dest):
 
         if origin["of"] > bestEver["of"]:
             bestEver = origin.copy()
+            if local_search:
+                lsbestimp.improve(bestEver)
     
     return bestEver
