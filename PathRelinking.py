@@ -5,9 +5,8 @@ from localsearch import lsbestimp
 import random
 
 def SelectRandomPair(lsol, avoid):
-    selected = avoid[0]
-    while selected in avoid:
-        selected = random.choice(lsol)
+    not_used_yet = [x for x in lsol if x not in avoid]
+    selected = random.choice(not_used_yet)
     avoid.append(selected)
     return selected, avoid
 
@@ -18,7 +17,7 @@ def ConstructMultipleSolutions(inst, alpha=0.1, nsol=10, max_time=None, local_se
     bestSol = {"of":0}
     
     i = 0
-    while (max_time is None and i < nsol) or (max_time is not None and time.time() - t_start < max_time):
+    while (max_time is None and i < nsol) or (max_time is not None and time.time() - t_start < max_time) or i < 2:
         sol = cgrasp.construct(inst, alpha)
         # solution.printSolution(sol)
         if local_search:
