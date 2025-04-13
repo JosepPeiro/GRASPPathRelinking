@@ -2,6 +2,15 @@ from constructives import cgrasp
 from structure import solution
 import time
 from localsearch import lsbestimp
+import random
+
+def SelectRandomPair(lsol, avoid):
+    selected = avoid[0]
+    while selected in avoid:
+        selected = random.choice(lsol)
+    avoid.append(selected)
+    return selected, avoid
+
 
 def ConstructMultipleSolutions(inst, alpha=0.1, nsol=10, max_time=None, local_search=False):
     t_start = time.time()

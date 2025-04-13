@@ -8,7 +8,7 @@ def improve(sol):
 
 def tryImprove(sol):
     sel, ofVarSel, unsel, ofVarUnsel = selectInterchange(sol)
-    print("sel: ", sel, "ofVarSel: ", ofVarSel)
+    # print("sel: ", sel, "ofVarSel: ", ofVarSel)
     if ofVarSel < ofVarUnsel:
         solution.removeFromSolution(sol, sel, ofVarSel)
         solution.addToSolution(sol, unsel, ofVarUnsel)
