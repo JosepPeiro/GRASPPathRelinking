@@ -118,3 +118,62 @@ min_desv <- analyzed %>%
 
 both_best <- intersect(distinct(max_best), distinct(min_desv))
 both_best
+
+only_grasp_files_all <- list.files("results")
+only_grasp_files <- only_grasp_files_all[grepl("csv$", only_grasp_files_all)]
+grasp_only <- data.frame()
+for (csv in only_grasp_files){
+  readed_gr <- read.csv(paste0("results/", csv))
+  readed_gr$time <- as.integer(strsplit(strsplit(csv, "-")[[1]][3], "[.]")[[1]][1])
+  grasp_only <- rbind(grasp_only, readed_gr)
+}
+
+union_datas <- grasp_only %>%
+  filter(alpha == 0.1) %>%
+  select(instance, obj_value, time) %>%
+  mutate(time = ifelse(time == 0, 0.1, time)) %>% 
+  inner_join(data %>% 
+               filter(local_search_before == TRUE,
+                      local_search_after == TRUE,
+                      nsols %in% c(10,20)) %>% 
+               select(path, max_time, nsols, random_pairs, obj_value) %>% 
+               mutate(path = gsub("\\.txt$", "", path)),
+             by = c("instance" = "path",
+                    "time" = "max_time"),
+             suffix = c("_grasp", "_pr"))
+
+small <- union_datas %>% 
+  filter(time %in% c(0.1, 1, 5),
+         nsols == 20,
+         random_pairs == 3) %>% 
+  mutate(diff = obj_value_pr - obj_value_grasp)
+hist(small$diff)
+
+test_small <- t.test(small$diff,
+                   mu = 0,
+                   alternative = "greater")
+test_small$p.value
+mean(small$diff)
+mean(small$diff > 0)
+
+
+biggo <- union_datas %>% 
+  filter(time %in% c(10, 15, 60),
+         nsols == 10,
+         random_pairs == 4) %>% 
+  mutate(diff = obj_value_pr - obj_value_grasp)
+hist(biggo$diff)
+
+test_biggo <- t.test(biggo$diff,
+                   mu = 0,
+                   alternative = "greater")
+test_biggo$p.value
+mean(biggo$diff)
+mean(biggo$diff > 0)
+
+ggplot(small, aes(diff)) + theme_minimal() +geom_histogram(fill = "lightblue", color = "black")+
+  labs(title = "Difference for low executing time observations",
+       x = "Differences", y = "Frequency")
+ggplot(biggo, aes(diff)) + theme_minimal() +geom_histogram(fill = "lightgreen", color = "black")+
+  labs(title = "Difference for high executing time observations",
+       x = "Differences", y = "Frequency")
