@@ -46,7 +46,4 @@ for path in instance_files:
                                                                 random_pairs=random_pairs)
 
                         f.write(f"{path},{alpha},{iters},{max_time},{nsols},{prop_time_grasp},{local_search_before},{local_search_after},{random_pairs},{best['of']},{time_taken}\n")
-
-    # print("Best solution found:")
-    # solution.printSolution(best)
-    # print(f"Time taken: {time_taken:.2f} seconds")
+f.close()
